@@ -13,11 +13,25 @@ struct ContentView: View {
                 }
                 TextEditor(text: $content)
             }
-            .sheet(isPresented: $showingFilePicker){
-                FilePicker(content: $content)
-            }
             .navigationTitle("A Section")
             .navigationBarTitleDisplayMode(.inline)
+            .fileImporter(isPresented: $showingFilePicker, allowedContentTypes: [.text]){ result in
+                do {
+                    let url = try result.get()
+                    print(url)
+                    
+                    guard url.startAccessingSecurityScopedResource() else { return }
+                    if let data = try? Data(contentsOf: url),
+                       let value = String(bytes: data, encoding: .utf8) {
+                        print(value)
+                        content = value
+                    }
+                    url.stopAccessingSecurityScopedResource()
+                } catch {
+                    print("Couldn't load file:")
+                    print("\(error.localizedDescription)")
+                }
+            }
         }
     }
 }
