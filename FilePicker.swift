@@ -24,12 +24,10 @@ struct FilePicker: UIViewControllerRepresentable {
         
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             let url = urls[0]
-            do {
-                let content = try Data(contentsOf: url)
-                print(content)
-            } catch {
-                print("Couldn't load file: \(error)")
-            }
+            guard url.startAccessingSecurityScopedResource(),
+                  let data = try? String(contentsOf: url) else { return }
+            url.stopAccessingSecurityScopedResource()
+            print(data)
         }
     }
 }
