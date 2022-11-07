@@ -31,7 +31,8 @@ let package = Package(
                 .portraitUpsideDown(.when(deviceFamilies: [.pad]))
             ],
             capabilities: [
-                .fileAccess(.userSelectedFiles, mode: .readWrite)
+                .fileAccess(.userSelectedFiles, mode: .readWrite),
+                .outgoingNetworkConnections()
             ]
         )
     ],
